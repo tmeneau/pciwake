@@ -1,0 +1,10 @@
+.idea/
+.gradle/
+.settings/
+/bin/
+/build/
+/devconfig/
+*.iws
+.project
+.eclipse
+.classpath

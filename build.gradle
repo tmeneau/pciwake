@@ -1,0 +1,149 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.codehaus.groovy:groovy-all:2.3.9',
+              'org.akhikhl.gretty:gretty:1.1.8'
+  }
+}
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+group = "com.xetus.oss.pci.wake"
+version = "1.0-SNAPSHOT"
+
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'eclipse'
+
+gretty {
+  jvmArgs = ["-Dpciwake.config=devconfig/"]
+  if (project.hasProperty("embeddedDb")) {
+    jvmArgs << "-Dpciwake.useEmbeddedDb=true"
+  }
+  
+  integrationTestTask = "please ignore"
+  fastReload = false
+  recompileOnSourceChange = false
+  reloadOnClassChange = false
+  reloadOnConfigChange = false
+  reloadOnLibChange = false
+  managedClassReload = false
+  inplaceMode = "hard"
+}
+
+sourceSets {
+  test {
+    java.srcDirs 'src/test/java'
+    groovy.srcDirs 'src/test/groovy'
+  }
+  integrationTest {
+    java.srcDirs 'src/integration-test/java'
+    groovy.srcDirs 'src/integration-test/groovy'
+    resources.srcDirs 'src/integration-test/resources'
+    compileClasspath += main.output + test.output
+    runtimeClasspath += main.output + test.output
+  }
+}
+
+configurations {
+  integrationTestCompile.extendsFrom testCompile
+  integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+  compile 'org.codehaus.groovy:groovy-all:2.3.9', // groovy
+          
+          /*
+           * Logging
+           */
+          'ch.qos.logback:logback-classic:1.1.2',
+          
+          /*
+           * Spring IOC
+           */
+          'javax.inject:javax.inject:1', // injection annotations
+          'org.springframework:spring-context:4.2.4.RELEASE', // spring
+          'org.springframework:spring-context-support:4.2.4.RELEASE', // context-support (for the Quartz integration)
+          
+          /*
+           * persistence
+           */
+          'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final', // JPA API
+          'org.springframework.data:spring-data-jpa:1.9.2.RELEASE', // Spring JPA
+          'org.hibernate:hibernate-entitymanager:5.0.7.Final', // JPA implementation
+          
+          'com.h2database:h2:1.4.191',
+          'mysql:mysql-connector-java:5.1.38',
+          
+          /*
+           * REST API
+           */
+          'org.springframework:spring-web:4.2.4.RELEASE', // Spring web -- REST
+          'org.apache.cxf:cxf-rt-frontend-jaxrs:3.1.5',
+          'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.7.1',
+          
+          /*
+           * Spring security
+           */
+          'org.springframework.security:spring-security-web:4.0.3.RELEASE',
+          'org.springframework.security:spring-security-config:4.0.3.RELEASE',
+          'org.springframework.security:spring-security-ldap:4.0.3.RELEASE',
+          
+          /*
+           * Scheduling engine
+           */
+          'org.quartz-scheduler:quartz:2.2.2',
+          
+          /*
+           * Simple Spring plugin framework 
+           */
+          'org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE',
+          
+          /*
+           * mail
+           */
+          'javax.mail:javax.mail-api:1.5.5',
+          'com.sun.mail:javax.mail:1.5.5',
+          
+          /*
+           * http
+           */
+          'org.apache.httpcomponents:httpclient:4.4',
+          
+          /*
+           * To remove...
+           */
+          'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.7.1', // TODO: REMOVE ME!!
+          'joda-time:joda-time:2.9.2' // TODO: REMOVE ME!!
+          
+          
+          
+  testCompile "junit:junit:4.11",
+              "org.springframework:spring-test:4.2.4.RELEASE",
+              "org.mockito:mockito-core:2.0.42-beta"
+  
+}
+
+task integrationTest(type: Test, 
+                     description: 'Runs the integration tests.', 
+                     group: 'Verification') {
+  testClassesDir = sourceSets.integrationTest.output.classesDir
+  classpath = sourceSets.integrationTest.runtimeClasspath
+  reports.html.destination = file("$buildDir/reports/integrationTests")
+}
+
+
+publishing {
+  publications {
+    dist(MavenPublication) {
+      from components.java
+    }
+  }
+}
