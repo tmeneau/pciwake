@@ -90,7 +90,6 @@ beans {
   }
     
   if (!useH2) {
-    quartzInitScript = new ClassPathResource()
     
     /*
      * this is required due to the Quartz SQL initializer script not being
