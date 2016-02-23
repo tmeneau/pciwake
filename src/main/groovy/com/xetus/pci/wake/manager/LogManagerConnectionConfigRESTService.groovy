@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 
 import javax.inject.Inject
 import javax.ws.rs.Consumes
+import javax.ws.rs.DELETE
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -43,6 +44,15 @@ class LogManagerConnectionConfigRESTService {
       return configRepo.save(config)
     }
     return null
+  }
+  
+  @DELETE
+  @Path("/{id}")
+  Map delete(@PathParam("id") Long id) {
+    boolean result = configRepo.delete(id)
+    return [
+      "success": result
+    ]
   }
   
   @POST
