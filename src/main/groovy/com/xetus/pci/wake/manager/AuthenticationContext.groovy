@@ -25,17 +25,7 @@ class AuthenticationContext {
   @Convert(converter = CryptoConverter.class)
   String username
   
-  @JsonIgnore
   @Convert(converter = CryptoConverter.class)
-  private String password
-  
-  @JsonIgnore
-  public String getPassword() {
-    return this.password
-  }
-  
-  @JsonProperty("password")
-  public void setPassword(String password) {
-    this.password = password
-  }
+  String password
+
 }
