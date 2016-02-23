@@ -18,7 +18,8 @@ public class CryptoConverter implements AttributeConverter<String, String> {
     @Override
     public String convertToDatabaseColumn(String value) {
       try {
-         return Base64.encodeBase64String(value.getBytes("UTF-8"))
+         return (value == null) ? 
+           null : Base64.encodeBase64String(value.getBytes("UTF-8"))
       } catch (e) {
          throw new RuntimeException(e);
       }
@@ -27,7 +28,8 @@ public class CryptoConverter implements AttributeConverter<String, String> {
     @Override
     public String convertToEntityAttribute(String dbData) {
       try {
-        return new String(Base64.decodeBase64(dbData.getBytes("UTF-8")), "UTF-8")
+        return (dbData == null) ?
+          null : new String(Base64.decodeBase64(dbData.getBytes("UTF-8")), "UTF-8")
       } catch (e) {
         throw new RuntimeException(e)
       }
