@@ -28,6 +28,7 @@ gretty {
     jvmArgs << "-Dpciwake.useEmbeddedDb=true"
   }
   
+  contextPath = "/";
   integrationTestTask = "please ignore"
   fastReload = false
   recompileOnSourceChange = false
