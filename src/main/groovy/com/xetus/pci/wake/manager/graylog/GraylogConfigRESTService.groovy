@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 
 import javax.inject.Inject
 import javax.ws.rs.Consumes
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
@@ -60,5 +61,14 @@ class GraylogConfigRESTService {
       clientConfig.queryConfig?.id)
     
     return graylogConfigRepo.save(clientConfig)
+  }
+  
+  @DELETE
+  @Path("/{id}")
+  Map delete(@PathParam("id") Long id) {
+    boolean result = graylogConfigRepo.delete(id)
+    return [
+      "success": result
+    ]
   }
 }

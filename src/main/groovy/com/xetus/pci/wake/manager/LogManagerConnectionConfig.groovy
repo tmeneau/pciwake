@@ -21,6 +21,8 @@ class LogManagerConnectionConfig {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id
   
+  String name
+  
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "auth_context_id")
   @XmlElement

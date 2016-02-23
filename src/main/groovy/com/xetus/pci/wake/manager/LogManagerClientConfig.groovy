@@ -37,11 +37,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id as JsonId
 @Table(name = "log_manager_client_config")
 @JsonTypeInfo(use=JsonId.CLASS, property="_class") 
 abstract class LogManagerClientConfig<C extends LogManagerConnectionConfig, 
-                                Q extends LogManagerQueryConfig> {
+                                      Q extends LogManagerQueryConfig> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id
+  
+  String name
   
   @ManyToOne
   @JoinColumn(name = "Log_manager_connection_config_id")
