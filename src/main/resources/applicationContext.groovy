@@ -37,7 +37,7 @@ beans {
    */
   if (useH2) {
     dataSource(org.springframework.jdbc.datasource.DriverManagerDataSource) { bean ->
-      url = "jdbc:h2:./build/embedded/h2/db:pciwake"
+      url = "jdbc:h2:./build/embedded/h2/db:pciwake;"
       driverClassName = "org.h2.Driver"
       username = ""
       password = ""
@@ -56,23 +56,22 @@ beans {
     jpaVendorAdapter = new org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter()
     dataSource = ref("dataSource")
     
-    def props = [
-      "hibernate.hbm2ddl.auto": "update",
-    ]
-    
     if (useH2) {
-      props << [
+      jpaProperties = [
+        "hibernate.hbm2ddl.auto": "create-drop",
         "hibernate.connection.driver_class": "org.h2.Driver",
-        "hibernate.dialect": "org.hibernate.dialect.H2Dialect"
+        "hibernate.dialect": "org.hibernate.dialect.H2Dialect",
+        "hibernate.hbm2ddl.import_files": "quartz_tables_h2.sql",
+        "hibernate.hbm2ddl.import_files_sql_extractor": "org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor"
+        
       ]
     } else {
-      props << [
+      jpaProperties = [
+        "hibernate.hbm2ddl.auto": "update",
         "hibernate.connection.driver_class": "com.mysql.jdbc.Driver",
         "hibernate.dialect": "org.hibernate.dialect.MySQLDialect"
       ]
     }
-    
-    jpaProperties = props
   }
   
   transactionManager(org.springframework.orm.jpa.JpaTransactionManager){
@@ -89,12 +88,9 @@ beans {
   quartzJobFactory(com.xetus.pci.wake.scheduler.AutowiringSpringBeanJobFactory) { bean ->
     ignoredUnknownProperties = "applicationContext"
   }
-  
-  // ensure the Quartz tables are created on startup
-  def quartzInitScript = [new ClassPathResource("quartz_tables_h2.sql")]
-  
+    
   if (!useH2) {
-    quartzInitScript = new ClassPathResource('quartz_tables_mysql.sql')
+    quartzInitScript = new ClassPathResource()
     
     /*
      * this is required due to the Quartz SQL initializer script not being
@@ -111,24 +107,23 @@ beans {
         separator: "\$\$"
       )
     }
-  }
-  
-  quartzDbInit(org.springframework.jdbc.datasource.init.DataSourceInitializer) { bean ->
-    if (!useH2) {
-      bean.dependsOn = "mysqlCreateIndexIfNotExistsProcedure"
+    
+    quartzDbInit(org.springframework.jdbc.datasource.init.DataSourceInitializer) { bean ->
+      dataSource = ref('dataSource')
+      enabled = true
+      databasePopulator = new ResourceDatabasePopulator(
+        scripts: new ClassPathResource('quartz_tables_mysql.sql'),
+        continueOnError: false,
+        ignoreFailedDrops: true,
+        sqlScriptEncoding: "UTF-8"
+      )
     }
-    dataSource = ref('dataSource')
-    enabled = true
-    databasePopulator = new ResourceDatabasePopulator(
-      scripts: quartzInitScript,
-      continueOnError: false,
-      ignoreFailedDrops: true,
-      sqlScriptEncoding: "UTF-8"
-    )
   }
   
   schedulerFactory(org.springframework.scheduling.quartz.SchedulerFactoryBean) { bean ->
-    bean.dependsOn = "quartzDbInit"
+    if (!useH2) {
+      bean.dependsOn = "quartzDbInit"
+    }
     dataSource = ref('dataSource')
     transactionManager = ref('transactionManager')
     jobFactory = ref('quartzJobFactory')
