@@ -4,8 +4,8 @@ import groovy.transform.CompileStatic
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 
-import com.xetus.pci.wake.SecurityConfiguration
-import com.xetus.pci.wake.SecurityWebApplicationInitializer
+import com.xetus.pci.wake.security.SecurityConfiguration
+import com.xetus.pci.wake.security.SecurityWebApplicationInitializer
 
 @CompileStatic
 class AuthenticationConfiguration {

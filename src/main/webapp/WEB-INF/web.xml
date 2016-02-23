@@ -6,7 +6,10 @@
          metadata-complete="true" version="3.0">
 
   <absolute-ordering />
-
+  <session-config>
+   <tracking-mode>COOKIE</tracking-mode>
+  </session-config>
+  
   <!--
    The global application context
   -->

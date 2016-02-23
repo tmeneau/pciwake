@@ -1,4 +1,4 @@
-package com.xetus.pci.wake
+package com.xetus.pci.wake.security
 
 import groovy.transform.CompileStatic
 

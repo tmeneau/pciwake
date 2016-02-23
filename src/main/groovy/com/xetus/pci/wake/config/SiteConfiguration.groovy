@@ -37,6 +37,8 @@ class SiteConfiguration {
    */
   AuthenticationConfiguration authConfig = new AuthenticationConfiguration()
   
+  String allowedOrigins = "http://localhost:3000";
+  
   DatabaseConfiguration db(@DelegatesTo(DatabaseConfiguration) Closure cl){
     cl.delegate = dbConfig
     cl.resolveStrategy =  Closure.DELEGATE_FIRST
