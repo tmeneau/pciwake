@@ -21,6 +21,8 @@ class SMTPConfig {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id
   
+  String name
+  
   /**
    * The SMTP host from which to send the email.
    */

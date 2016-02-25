@@ -29,4 +29,6 @@ class Notification {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id
+  
+  String name
 }
