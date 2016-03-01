@@ -18,7 +18,7 @@ import org.springframework.plugin.core.Plugin
  */
 @CompileStatic
 interface LogManagerClientPlugin<T extends LogManagerClientConfig> 
-          extends Plugin<LogManagerClientConfig> {
+          extends Plugin<T> {
   
   /**
    * Issues the request to the log manager at the supplied endpoint using the 

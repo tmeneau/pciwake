@@ -18,7 +18,7 @@ import org.springframework.plugin.core.Plugin
  */
 @CompileStatic
 interface NotificationProcessorPlugin<N extends Notification> 
-          extends Plugin<Notification> {
+          extends Plugin<N> {
 
   /**
    * Process and deliver the supplied {@link Notification} instance, using the 

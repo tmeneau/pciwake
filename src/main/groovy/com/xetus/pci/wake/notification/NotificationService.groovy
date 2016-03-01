@@ -29,7 +29,7 @@ class NotificationService {
    */
   @Inject
   @Qualifier("notificationProcessorPluginRegistry")
-  PluginRegistry<NotificationProcessorPlugin, Notification> notificationProcessorRegistry
+  PluginRegistry<NotificationProcessorPlugin<? extends Notification>, ? extends Notification> notificationProcessorRegistry
   
   /**
    * A very simple queue of notification requests that failed for transient
