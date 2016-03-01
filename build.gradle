@@ -58,12 +58,6 @@ configurations {
   integrationTestRuntime.extendsFrom testRuntime
 }
 
-test {
-  systemProperties = [
-    DISABLE_LOGGING: true
-  ]
-}
-
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.3.9', // groovy
           
@@ -144,6 +138,12 @@ task integrationTest(type: Test,
   testClassesDir = sourceSets.integrationTest.output.classesDir
   classpath = sourceSets.integrationTest.runtimeClasspath
   reports.html.destination = file("$buildDir/reports/integrationTests")
+}
+
+tasks.withType(Test) {
+  systemProperties << [
+    DISABLE_LOGGING: true
+  ]
 }
 
 
