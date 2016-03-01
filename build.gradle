@@ -58,6 +58,12 @@ configurations {
   integrationTestRuntime.extendsFrom testRuntime
 }
 
+test {
+  systemProperties = [
+    DISABLE_LOGGING: true
+  ]
+}
+
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.3.9', // groovy
           
