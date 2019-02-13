@@ -1,5 +1,9 @@
 # PCI Wake
 
+## Abandoned
+
+WArning: this project has been abandoned and is not under active development!
+
 ## Overview
 
 An open source web application developed as a solution to the PCI (and possibly
